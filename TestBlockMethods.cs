@@ -23,7 +23,7 @@ namespace SimpleBlockchain
             if (previousBlock != null)
             {
                 var index = previousBlock.Index;
-                var previousHash = previousBlock.Hash;
+                var previousHash = previousBlock.BlockHash;
                 var data = "My little ship";
 
                 newBlock = new Block<string>(index, previousHash, data);

@@ -60,29 +60,29 @@ namespace SimpleBlockchain
             {
                 Block<T> newBlock = null;
                 Block<T> previousBlock = null;
-                var previousHash = string.Empty;
+                var previousBlockHash = string.Empty;
 
                 if (theBlockchain.Count() > 0)
                 {
                     var lastIndex = theBlockchain.Count;
 
                     previousBlock = theBlockchain[lastIndex - 1];
-                    previousHash = previousBlock.Hash;
+                    previousBlockHash = previousBlock.BlockHash;
 
                     var newIndex = previousBlock.Index;
 
-                    newBlock = new Block<T>(newIndex, previousBlock.Hash, data);
+                    newBlock = new Block<T>(newIndex, previousBlock.BlockHash, data);
                 }
 
                 else
                 {
                     newBlock = Block<T>.CreateGenesisBlock(data);
-                    previousHash = newBlock.PreviousHash;
+                    previousBlockHash = newBlock.PreviousBlockHash;
                 }
 
                 var validationError = string.Empty;
         
-                if (Block<T>.IsValid(previousHash, newBlock, out validationError))
+                if (Block<T>.IsValid(previousBlockHash, newBlock, out validationError))
                 {
                     theBlockchain.Add(newBlock);
                 }

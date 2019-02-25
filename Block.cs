@@ -27,10 +27,10 @@ namespace SimpleBlockchain
         #region Block Class Data Members
 
         public int Index { get; private set; }
-        public string PreviousHash { get; private set; }
+        public string PreviousBlockHash { get; private set; }
         public DateTime UTCTimeStamp { get; private set; }
         public T Data { get; private set; }
-        public string Hash { get; private set; }
+        public string BlockHash { get; private set; }
 
         #endregion // Block Class Data Members
 
@@ -52,19 +52,18 @@ namespace SimpleBlockchain
                 "ERROR: Previous Hash must be a Non-Null and Non-Empty string.");
             }
 
-            PreviousHash = previousHash;
+            PreviousBlockHash = previousHash;
 
             UTCTimeStamp = DateTime.UtcNow;
 
             if (data == null)
             {
-                throw new ArgumentNullException("data",
-                "ERROR: Block data value cannot be null.");
+                throw new ArgumentNullException("data", "ERROR: Block data value cannot be null.");
             }
 
             Data = data;
 
-            Hash = GenerateBlockHash(Index, PreviousHash, UTCTimeStamp, Data);
+            BlockHash = GenerateBlockHash(Index, PreviousBlockHash, UTCTimeStamp, Data);
         }
 
         #endregion Block Class Constructor
@@ -134,12 +133,12 @@ namespace SimpleBlockchain
 
             if (!string.IsNullOrEmpty(previousHash))
             {
-                if ((string.Compare(previousHash, block.PreviousHash)) == StringsMatch)
+                if ((string.Compare(previousHash, block.PreviousBlockHash)) == StringsMatch)
                 {
                     var blockHash =
-                    GenerateBlockHash(block.Index, block.PreviousHash, block.UTCTimeStamp, block.Data);
+                    GenerateBlockHash(block.Index, block.PreviousBlockHash, block.UTCTimeStamp, block.Data);
 
-                    if (string.Compare(block.Hash, blockHash) == StringsMatch)
+                    if (string.Compare(block.BlockHash, blockHash) == StringsMatch)
                     {
                         isValidBlock = true;
                     }
@@ -154,7 +153,7 @@ namespace SimpleBlockchain
                 else
                 {
                     lastValidationError =
-                    $"Mismatch between PreviousBlock.Hash and this Block.PreviousHash in Block {block.Index.ToString()}";
+                    $"Mismatch between PreviousBlock.Hash and this Block.PreviousBlockHash in Block {block.Index.ToString()}";
                 }
             }
 
@@ -176,7 +175,7 @@ namespace SimpleBlockchain
 
             if (previousBlock != null)
             {
-                isValidBlock =  IsValid(previousBlock.Hash, this, 
+                isValidBlock =  IsValid(previousBlock.BlockHash, this, 
                                         out lastValidationError);
             }
 
@@ -196,19 +195,19 @@ namespace SimpleBlockchain
             traceBlock.AppendFormat("{0} Contents:", this.GetType().Name);
             traceBlock.AppendLine();
 
-            traceBlock.AppendFormat("           Index: {0}", Index.ToString());
+            traceBlock.AppendFormat("                Index: {0}", Index.ToString());
             traceBlock.AppendLine();
 
-            traceBlock.AppendFormat("    PreviousHash: {0}", PreviousHash);
+            traceBlock.AppendFormat("    PreviousBlockHash: {0}", PreviousBlockHash);
             traceBlock.AppendLine();
 
-            traceBlock.AppendFormat("    UTCTimeStamp: {0}", UTCTimeStamp.ToUniversalTime().ToString());
+            traceBlock.AppendFormat("         UTCTimeStamp: {0}", UTCTimeStamp.ToUniversalTime().ToString());
             traceBlock.AppendLine();
 
-            traceBlock.AppendFormat("            Data: {0}", Data.ToString());
+            traceBlock.AppendFormat("                 Data: {0}", Data.ToString());
             traceBlock.AppendLine();
 
-            traceBlock.AppendFormat("            Hash: {0}", Hash);
+            traceBlock.AppendFormat("             BlockHash: {0}", BlockHash);
             traceBlock.AppendLine();
 
             return traceBlock.ToString();
